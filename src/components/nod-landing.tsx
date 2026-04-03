@@ -8,9 +8,11 @@ import {
   ChevronRight,
   Command,
   Globe,
+  Menu,
   ShieldCheck,
   Sparkles,
   Workflow,
+  X,
 } from "lucide-react";
 
 import { ArbiPilotApp } from "@/components/arbipilot-app";
@@ -37,7 +39,7 @@ const pillars = [
   },
   {
     title: "Trust scales with agents",
-    body: "Start with swaps today. Extend toward richer agentic finance flows later, without abandoning the trust boundary.",
+    body: "Start with swaps today. Extend toward richer agentic finance flows later without abandoning the trust boundary.",
     icon: BadgeCheck,
   },
 ];
@@ -60,6 +62,13 @@ const flow = [
   },
 ];
 
+const notes = [
+  "Arbitrum-native execution path",
+  "Registry-ready identity layer",
+  "Explain-then-execute product surface",
+  "Swap flow as first constrained action",
+];
+
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -67,6 +76,7 @@ function cn(...classes: Array<string | false | null | undefined>) {
 export function NodLanding() {
   const [activeSection, setActiveSection] = useState("#problem");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const ids = ["problem", "architecture", "proof", "app"];
@@ -79,7 +89,7 @@ export function NodLanding() {
         const element = document.getElementById(id);
         if (!element) continue;
         const rect = element.getBoundingClientRect();
-        if (rect.top <= 160) current = `#${id}`;
+        if (rect.top <= 170) current = `#${id}`;
       }
 
       setActiveSection(current);
@@ -89,6 +99,15 @@ export function NodLanding() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <div className="min-h-screen text-white">
@@ -132,15 +151,56 @@ export function NodLanding() {
             ))}
           </nav>
 
-          <a
-            href="#app"
-            className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-xs font-medium text-slate-200 transition hover:border-cyan-300/30 hover:bg-cyan-400/10 hover:text-white"
-          >
-            Open product
-            <ChevronRight size={14} />
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="#app"
+              className="hidden items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-xs font-medium text-slate-200 transition hover:border-cyan-300/30 hover:bg-cyan-400/10 hover:text-white sm:inline-flex"
+            >
+              Open product
+              <ChevronRight size={14} />
+            </a>
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-slate-200 md:hidden"
+              aria-label="Open navigation"
+            >
+              <Menu size={18} />
+            </button>
+          </div>
         </div>
       </header>
+
+      {mobileOpen ? (
+        <div className="fixed inset-0 z-[70] bg-[#05070a]/96 px-6 pb-8 pt-24 md:hidden">
+          <button
+            type="button"
+            onClick={closeMobile}
+            className="absolute right-5 top-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-white"
+            aria-label="Close navigation"
+          >
+            <X size={18} />
+          </button>
+
+          <div className="flex h-full flex-col">
+            <div className="flex flex-col gap-4 text-2xl font-medium tracking-tight text-white">
+              {navItems.map((item) => (
+                <a key={item.href} href={item.href} onClick={closeMobile} className="hover:text-cyan-200 transition-colors">
+                  {item.label}
+                </a>
+              ))}
+            </div>
+            <a
+              href="#app"
+              onClick={closeMobile}
+              className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black"
+            >
+              Open product
+              <ArrowRight size={16} />
+            </a>
+          </div>
+        </div>
+      ) : null}
 
       <section id="top" className="relative flex min-h-screen items-center border-b border-white/[0.06] pt-28">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-6 pb-20 pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:px-10 lg:pb-28">
@@ -151,7 +211,7 @@ export function NodLanding() {
             </div>
 
             <div className="text-[11px] uppercase tracking-[0.34em] text-slate-500 animate-fade-in-up" style={{ animationDelay: "90ms" }}>
-              Inspired by the strongest product patterns in recent agentic submissions
+              Built with the strongest visual lessons from AgentHands and eaco1
             </div>
 
             <h1
@@ -192,23 +252,12 @@ export function NodLanding() {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/[0.05] bg-white/[0.03] p-4">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-slate-500">Model role</div>
-                  <div className="mt-2 text-base font-semibold text-slate-100">Interpret intent only</div>
-                </div>
-                <div className="rounded-2xl border border-white/[0.05] bg-white/[0.03] p-4">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-slate-500">Execution role</div>
-                  <div className="mt-2 text-base font-semibold text-slate-100">Validate + constrain in code</div>
-                </div>
-                <div className="rounded-2xl border border-white/[0.05] bg-white/[0.03] p-4">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-slate-500">Initial action</div>
-                  <div className="mt-2 text-base font-semibold text-slate-100">Safe swap flow</div>
-                </div>
-                <div className="rounded-2xl border border-white/[0.05] bg-white/[0.03] p-4">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-slate-500">Identity path</div>
-                  <div className="mt-2 text-base font-semibold text-slate-100">Registry-ready agent</div>
-                </div>
+              <div className="grid gap-3">
+                {notes.map((note) => (
+                  <div key={note} className="rounded-2xl border border-white/[0.05] bg-white/[0.03] px-4 py-3 text-sm font-medium text-slate-200">
+                    {note}
+                  </div>
+                ))}
               </div>
 
               <div className="mt-5 rounded-2xl border border-white/[0.05] bg-black/20 p-4 text-sm leading-7 text-slate-300">
@@ -220,7 +269,7 @@ export function NodLanding() {
       </section>
 
       <section id="problem" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
-        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
           <CardShell className="h-full">
             <div className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200">The real-world problem</div>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
